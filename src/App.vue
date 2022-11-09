@@ -1,7 +1,7 @@
 <template>
     <canvas :width="width" :height="height" ref="canvas"></canvas>
     <div v-for="t in textboxes" :key="t.idx">
-        <drag-text :updateLinesHandler="updateLines" :startX="10" :startY="400"/>
+        <drag-text :updateLinesHandler="updateLines" :startX="t.x" :startY="t.y"/>
     </div>
 </template>
 
@@ -22,10 +22,13 @@ export default {
             height: window.innerHeight,
             // app 
             textboxes: [
-                { id: 1 }
+                { x: 10, y: 100 },
+                { x: 100, y: 500},
+                { x: 300, y: 600 }
             ],
             lines: [ 
-                { fromX: 10, fromY: 400, toX: 10, toY: 0},
+                { fromX: 10, fromY: 100, toX: 100, toY: 500},
+                { fromX: 10, fromY: 100, toX: 300, toY: 600}
             ],
 
         }
@@ -44,7 +47,7 @@ export default {
         },
         // so far only redraws -- may need to add and delete lines in the future as well
         // maybe we can add a final param that is a string describing the action 
-        // like: updateLines(oldX, oldY, newX, newY, action="DELETE")
+        // like: updateLines(action="DELETE", oldX, oldY, newX, newY)
         // or we can update and check the param count..
         updateLines(oldX, oldY, newX, newY){
             for(let i = 0; i < this.lines.length; i++){
