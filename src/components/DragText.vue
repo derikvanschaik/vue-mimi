@@ -6,6 +6,7 @@
     @mousedown="handleDragStart"
     @mouseup="handleDragEnd">
     {{ text }}
+    <button @click="handleDelete">Delete</button>
   </div>
 </template>
 
@@ -16,6 +17,8 @@ export default {
   props:{
     updateLinesHandler: Function,
     updateTextbox: Function,
+    deleteTextbox: Function,
+    text: String,
     startX: Number,
     startY: Number
   }, 
@@ -26,7 +29,6 @@ export default {
   }, 
   data(){
     return{
-      text: 'hello world',
       x: this.startX,
       y: this.startY,
       isDragging: false
@@ -68,6 +70,10 @@ export default {
     },
     handleDragEnd(){
       this.isDragging = false;
+    },
+    handleDelete(){
+      this.deleteTextbox();
+      this.updateLinesHandler(this.$refs.textbox.offsetLeft, this.$refs.textbox.offsetTop);
     }
   }
 }

@@ -1,12 +1,14 @@
 <template>
     <canvas :width="width" :height="height" ref="canvas"></canvas>
-    <div v-for="t,i in textboxes" :key="i">
-        <drag-text 
-            :updateLinesHandler="updateLines"
-            :updateTextbox="updateTextbox(i)" 
-            :startX="t.x" 
-            :startY="t.y"/>
-    </div>
+    <drag-text
+        v-for="t,i in textboxes"
+        :key="t.text"
+        :updateLinesHandler="updateLines"
+        :updateTextbox="updateTextbox(i)"
+        :deleteTextbox="deleteTextbox(i)"
+        :text="t.text"
+        :startX="t.x" 
+        :startY="t.y"/>
 </template>
 
 <script>
@@ -26,9 +28,9 @@ export default {
             height: window.innerHeight,
             // app 
             textboxes: [
-                { x: 10, y: 100 },
-                { x: 100, y: 500},
-                { x: 300, y: 600 }
+                { x: 10, y: 100, text: 'hello' },
+                { x: 100, y: 500, text: 'world'},
+                { x: 300, y: 600, text: 'how are you?' }
             ],
             lines: [ 
                 { fromX: 10, fromY: 100, toX: 100, toY: 500},
@@ -38,9 +40,14 @@ export default {
         }
     },
     methods: {
+        deleteTextbox(idx){
+            return () =>{
+                this.textboxes = this.textboxes.filter( (_, i) => i !== idx);
+            }
+        }, 
         updateTextbox(idx){
             return (x, y) =>{
-                this.textboxes[idx] = { x, y };
+                this.textboxes[idx] = { ...this.textboxes[idx],x, y };
             }
         }, 
         clearCanvasAndDrawLines(){
@@ -59,16 +66,28 @@ export default {
         // like: updateLines(action="DELETE", oldX, oldY, newX, newY)
         // or we can update and check the param count..
         updateLines(oldX, oldY, newX, newY){
+            const deletingLine = (newX === null || newX === undefined) 
+            && (newY === null || newY === undefined);
+            
             for(let i = 0; i < this.lines.length; i++){
                 const {fromX, fromY, toX, toY} = this.lines[i];
 
                 if(fromX === oldX && fromY === oldY){
-                    this.lines[i] = {fromX: newX, fromY: newY, toX, toY};
+                    if(deletingLine){
+                        this.lines[i] = null; // placeholder to later delete
+                    }else{
+                        this.lines[i] = {fromX: newX, fromY: newY, toX, toY};
+                    }
 
                 }else if (toX === oldX && toY === oldY){
-                    this.lines[i] = {fromX, fromY, toX: newX, toY: newY};
+                    if(deletingLine){
+                        this.lines[i] = null; // placeholder to delete line
+                    }else{
+                        this.lines[i] = {fromX, fromY, toX: newX, toY: newY};
+                    }
                 }
             }
+            this.lines = this.lines.filter( line => line !== null); // filter deleted lines
             this.clearCanvasAndDrawLines();
         }
     }
