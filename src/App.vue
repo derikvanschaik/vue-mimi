@@ -1,5 +1,6 @@
 <template>
     <canvas :width="width" :height="height" ref="canvas"></canvas>
+    <button class="menu-btn" @click="addTextbox">Add Tbox</button>
     <drag-text
         v-for="t,i in textboxes"
         :key="t.text"
@@ -40,6 +41,19 @@ export default {
         }
     },
     methods: {
+        addTextbox(){
+            this.textboxes.push(
+                {
+                    x: 500, 
+                    y: 500,
+                    // TODO: this will cause a bug related to the keys of the drag box 
+                    // component
+                    // solution is to get a unique id for each textbox and not use textbox's text
+                    // as a unique key...
+                    text: 'textbox (' + this.textboxes.length + ')'
+                }
+            )
+        },
         deleteTextbox(idx){
             return () =>{
                 this.textboxes = this.textboxes.filter( (_, i) => i !== idx);
@@ -99,6 +113,10 @@ export default {
     padding:0
 }
 canvas{
+    position: absolute;
+}
+.menu-btn{
+    padding: 5px 5px;
     position: absolute;
 }
 </style>
