@@ -1,7 +1,11 @@
 <template>
     <canvas :width="width" :height="height" ref="canvas"></canvas>
-    <div v-for="t in textboxes" :key="t.idx">
-        <drag-text :updateLinesHandler="updateLines" :startX="t.x" :startY="t.y"/>
+    <div v-for="t,i in textboxes" :key="i">
+        <drag-text 
+            :updateLinesHandler="updateLines"
+            :updateTextbox="updateTextbox(i)" 
+            :startX="t.x" 
+            :startY="t.y"/>
     </div>
 </template>
 
@@ -34,6 +38,11 @@ export default {
         }
     },
     methods: {
+        updateTextbox(idx){
+            return (x, y) =>{
+                this.textboxes[idx] = { x, y };
+            }
+        }, 
         clearCanvasAndDrawLines(){
             const ctx = this.$refs.canvas.getContext("2d");
             ctx.clearRect(0, 0, this.width, this.height);

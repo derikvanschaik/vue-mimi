@@ -15,6 +15,7 @@ export default {
   name: 'App',
   props:{
     updateLinesHandler: Function,
+    updateTextbox: Function,
     startX: Number,
     startY: Number
   }, 
@@ -61,6 +62,8 @@ export default {
         this.updateLinesHandler(
           oldOffsetLeft, oldOffsetTop,
           (e.target.offsetLeft),(e.target.offsetTop));
+          
+        this.updateTextbox(oldOffsetLeft, oldOffsetTop);
       }
     },
     handleDragEnd(){
