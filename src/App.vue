@@ -6,7 +6,7 @@
     </div>
     <drag-text
         v-for="t,i in textboxes"
-        :key="t.text"
+        :key="t.id"
         :updateLinesHandler="updateLines"
         :updateTextbox="updateTextbox(i)"
         :deleteTextbox="deleteTextbox(i)"
@@ -20,6 +20,7 @@
 
 <script>
 import DragText from './components/DragText.vue';
+const { v4: uuid } = require("uuid")
 
 export default {
     components:{DragText},
@@ -40,9 +41,9 @@ export default {
             height: window.innerHeight,
             // app 
             textboxes: [
-                { x: 10, y: 100, text: 'hello', selected: false },
-                { x: 100, y: 500, text: 'world', selected: false },
-                { x: 300, y: 600, text: 'how are you?', selected: false}
+                { x: 10, y: 100, text: 'hello', selected: false, id: uuid() },
+                { x: 100, y: 500, text: 'world', selected: false, id: uuid() },
+                { x: 300, y: 600, text: 'how are you?', selected: false, id: uuid() }
             ],
             lines: [ 
                 { fromX: 10, fromY: 100, toX: 100, toY: 500},
@@ -61,8 +62,9 @@ export default {
                     // component
                     // solution is to get a unique id for each textbox and not use textbox's text
                     // as a unique key...
-                    text: 'textbox (' + this.textboxes.length + ')',
-                    selected: false
+                    text: 'click edit to change text',
+                    selected: false,
+                    id: uuid()
                 }
             )
         },
