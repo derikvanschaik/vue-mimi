@@ -58,10 +58,6 @@ export default {
                 {
                     x: 500, 
                     y: 500,
-                    // TODO: this will cause a bug related to the keys of the drag box 
-                    // component
-                    // solution is to get a unique id for each textbox and not use textbox's text
-                    // as a unique key...
                     text: 'click edit to change text',
                     selected: false,
                     id: uuid()
