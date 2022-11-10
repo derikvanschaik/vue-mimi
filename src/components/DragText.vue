@@ -7,6 +7,7 @@
     @mouseup="handleDragEnd">
     {{ text }}
     <button @click="handleDelete">Delete</button>
+    <input @click="handleSelect" type="checkbox" />
   </div>
 </template>
 
@@ -18,6 +19,7 @@ export default {
     updateLinesHandler: Function,
     updateTextbox: Function,
     deleteTextbox: Function,
+    selectTextbox: Function,
     text: String,
     startX: Number,
     startY: Number
@@ -65,15 +67,22 @@ export default {
           oldOffsetLeft, oldOffsetTop,
           (e.target.offsetLeft),(e.target.offsetTop));
           
-        this.updateTextbox(oldOffsetLeft, oldOffsetTop);
+        this.updateTextbox(e.target.offsetLeft, e.target.offsetTop);
       }
     },
     handleDragEnd(){
+      this.updateTextbox(this.$refs.textbox.offsetLeft, this.$refs.textbox.offsetTop);
       this.isDragging = false;
     },
     handleDelete(){
       this.deleteTextbox();
       this.updateLinesHandler(this.$refs.textbox.offsetLeft, this.$refs.textbox.offsetTop);
+    },
+    handleSelect(e){
+      e.stopPropagation();
+      // console.log(this.$refs.textbox.offsetLeft, this.$refs.textbox.offsetTop);
+
+      this.selectTextbox();
     }
   }
 }

@@ -1,12 +1,16 @@
 <template>
     <canvas :width="width" :height="height" ref="canvas"></canvas>
-    <button class="menu-btn" @click="addTextbox">Add Tbox</button>
+    <div class="menu">
+        <button class="menu-btn" @click="addTextbox">Add Tbox</button>
+        <button class="menu-btn" @click="connectedSelected" :disabled="cannotConnect">Connect</button>
+    </div>
     <drag-text
         v-for="t,i in textboxes"
         :key="t.text"
         :updateLinesHandler="updateLines"
         :updateTextbox="updateTextbox(i)"
         :deleteTextbox="deleteTextbox(i)"
+        :selectTextbox="selectTextbox(i)"
         :text="t.text"
         :startX="t.x" 
         :startY="t.y"/>
@@ -22,6 +26,11 @@ export default {
     mounted(){
         this.clearCanvasAndDrawLines();
     },
+    computed:{
+        cannotConnect(){
+            return this.textboxes.filter(t => t.selected).length !== 2;
+        }
+    },
     data(){
         return{
             // canvas
@@ -29,9 +38,9 @@ export default {
             height: window.innerHeight,
             // app 
             textboxes: [
-                { x: 10, y: 100, text: 'hello' },
-                { x: 100, y: 500, text: 'world'},
-                { x: 300, y: 600, text: 'how are you?' }
+                { x: 10, y: 100, text: 'hello', selected: false },
+                { x: 100, y: 500, text: 'world', selected: false },
+                { x: 300, y: 600, text: 'how are you?', selected: false}
             ],
             lines: [ 
                 { fromX: 10, fromY: 100, toX: 100, toY: 500},
@@ -50,9 +59,15 @@ export default {
                     // component
                     // solution is to get a unique id for each textbox and not use textbox's text
                     // as a unique key...
-                    text: 'textbox (' + this.textboxes.length + ')'
+                    text: 'textbox (' + this.textboxes.length + ')',
+                    selected: false
                 }
             )
+        },
+        selectTextbox(idx){
+            return () =>{
+                this.textboxes[idx].selected = !this.textboxes[idx].selected;
+            }
         },
         deleteTextbox(idx){
             return () =>{
@@ -69,6 +84,7 @@ export default {
             ctx.clearRect(0, 0, this.width, this.height);
 
             this.lines.forEach( line =>{
+                // console.log(`drawing line from (${line.fromX},${line.fromY}) to (${line.toX},${line.toY})` );
                 ctx.beginPath();
                 ctx.moveTo(line.fromX, line.fromY);
                 ctx.lineTo(line.toX, line.toY);
@@ -103,6 +119,13 @@ export default {
             }
             this.lines = this.lines.filter( line => line !== null); // filter deleted lines
             this.clearCanvasAndDrawLines();
+        },
+        connectedSelected(){
+            const [b1, b2] = this.textboxes.filter( t => t.selected);
+            const newLine = { fromX: b1.x, fromY: b1.y, toX: b2.x, toY: b2.y};
+            console.log("connecting:",b1, b2, newLine);
+            this.lines.push(newLine);
+            this.clearCanvasAndDrawLines();
         }
     }
 }
@@ -115,8 +138,12 @@ export default {
 canvas{
     position: absolute;
 }
-.menu-btn{
-    padding: 5px 5px;
+.menu{
     position: absolute;
+    display: flex;
+    align-items: center;
+}
+.menu-btn{
+    padding: 10px 15px;
 }
 </style>
