@@ -6,8 +6,9 @@
     @mousedown="handleDragStart"
     @mouseup="handleDragEnd">
     {{ text }}
-    <button @click="handleDelete">Delete</button>
-    <input @click="handleSelect" type="checkbox" />
+    <button @click="handleDelete" class="delete">Delete</button>
+    <input @click="handleSelect" type="checkbox" class="select" :checked="selected"/>
+
   </div>
 </template>
 
@@ -20,6 +21,7 @@ export default {
     updateTextbox: Function,
     deleteTextbox: Function,
     selectTextbox: Function,
+    selected: Boolean,
     text: String,
     startX: Number,
     startY: Number
@@ -46,6 +48,8 @@ export default {
     },
     handleDrag(e){
       if(this.isDragging){
+
+        if(e.target !== this.$refs.textbox) return
         // draw textbox 
         const dx = e.clientX - this.x;
         const dy = e.clientY - this.y;
@@ -81,13 +85,12 @@ export default {
     handleSelect(e){
       e.stopPropagation();
       // console.log(this.$refs.textbox.offsetLeft, this.$refs.textbox.offsetTop);
-
       this.selectTextbox();
     }
   }
 }
 </script>
-<style>
+<style scoped>
 .textbox{
   background-color: white;
   color: black;
@@ -98,5 +101,16 @@ export default {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
   border-radius: 4px;
   border: 1px solid #42b883;
+}
+
+.delete, .select{
+  position: absolute;
+  top: 0;
+}
+.delete{
+  left: 0;
+}
+.select{
+  right: 0;
 }
 </style>

@@ -11,6 +11,7 @@
         :updateTextbox="updateTextbox(i)"
         :deleteTextbox="deleteTextbox(i)"
         :selectTextbox="selectTextbox(i)"
+        :selected="t.selected"
         :text="t.text"
         :startX="t.x" 
         :startY="t.y"/>
@@ -123,9 +124,10 @@ export default {
         connectedSelected(){
             const [b1, b2] = this.textboxes.filter( t => t.selected);
             const newLine = { fromX: b1.x, fromY: b1.y, toX: b2.x, toY: b2.y};
-            console.log("connecting:",b1, b2, newLine);
             this.lines.push(newLine);
             this.clearCanvasAndDrawLines();
+            // deselect all post connection
+            this.textboxes.forEach( t => t.selected = false);
         }
     }
 }
