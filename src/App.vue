@@ -137,6 +137,7 @@ export default {
 }
 canvas{
     position: absolute;
+    background-color: #DCDCDC;
 }
 .menu{
     position: absolute;
