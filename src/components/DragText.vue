@@ -5,8 +5,13 @@
     @mousemove="handleDrag"
     @mousedown="handleDragStart"
     @mouseup="handleDragEnd">
-    {{ text }}
+    <p v-if="!isEditing">
+      {{ inputText }}
+    </p>
+    <textarea v-else v-model="inputText" rows="7" @input="handleInput"></textarea>
+
     <button @click="handleDelete" class="delete">Delete</button>
+    <button @click="toggleIsEditing">{{ isEditing? 'Done': 'Edit'}}</button>
     <input @click="handleSelect" type="checkbox" class="select" :checked="selected"/>
 
   </div>
@@ -21,6 +26,7 @@ export default {
     updateTextbox: Function,
     deleteTextbox: Function,
     selectTextbox: Function,
+    updateTextboxText: Function,
     selected: Boolean,
     text: String,
     startX: Number,
@@ -35,12 +41,16 @@ export default {
     return{
       x: this.startX,
       y: this.startY,
-      isDragging: false
+      isDragging: false,
+      isEditing: false,
+      inputText: this.text,
+
     }
   },
   methods: {
 
     handleDragStart(e){
+      if(this.isEditing) return;
       // set the current mouse position
       this.x = e.clientX;
       this.y = e.clientY;
@@ -86,6 +96,12 @@ export default {
       e.stopPropagation();
       // console.log(this.$refs.textbox.offsetLeft, this.$refs.textbox.offsetTop);
       this.selectTextbox();
+    },
+    toggleIsEditing(){
+      this.isEditing = !this.isEditing;
+      if(!this.isEditing){
+        this.updateTextboxText(this.inputText);
+      }
     }
   }
 }

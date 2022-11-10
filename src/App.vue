@@ -11,6 +11,7 @@
         :updateTextbox="updateTextbox(i)"
         :deleteTextbox="deleteTextbox(i)"
         :selectTextbox="selectTextbox(i)"
+        :updateTextboxText="updateTextboxText(i)"
         :selected="t.selected"
         :text="t.text"
         :startX="t.x" 
@@ -74,12 +75,17 @@ export default {
             return () =>{
                 this.textboxes = this.textboxes.filter( (_, i) => i !== idx);
             }
-        }, 
+        },
         updateTextbox(idx){
             return (x, y) =>{
                 this.textboxes[idx] = { ...this.textboxes[idx],x, y };
             }
-        }, 
+        },
+        updateTextboxText(idx){
+            return (text) =>{
+                this.textboxes[idx] = {...this.textboxes[idx], text};
+            }
+        },
         clearCanvasAndDrawLines(){
             const ctx = this.$refs.canvas.getContext("2d");
             ctx.clearRect(0, 0, this.width, this.height);
