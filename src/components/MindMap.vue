@@ -1,6 +1,8 @@
 <template>
     <canvas :width="width" :height="height" ref="canvas"></canvas>
-    <button class="menu-btn close" @click="handleClose">Close</button>
+    <div @click="handleClose" class="close">
+        <span class="close-icon">+</span>
+    </div>
     <div class="menu">
         <button class="menu-btn" @click="addTextbox">Add Tbox</button>
         <button class="menu-btn" @click="connectedSelected" :disabled="cannotConnect">Connect</button>
@@ -164,5 +166,12 @@ canvas{
     position: absolute;
     right: 50px;
     top: 0;
+    cursor: pointer;
+}
+.close-icon {
+  font-size: 60px;
+  font-weight: 600;
+  display: inline-block;
+  transform: rotate(45deg);
 }
 </style>
