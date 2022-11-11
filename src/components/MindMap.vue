@@ -29,6 +29,8 @@ export default {
         curTextboxes: Array,
         curLines: Array,
         handleClose: Function,
+        updateTextboxesHandler: Function, 
+        updateLinesHandler: Function,
     }, 
     // TODO: maybe move this canvas resizing into a specific canvas component since it is not 
     // not really app logic...
@@ -126,6 +128,17 @@ export default {
             this.clearCanvasAndDrawLines();
             // deselect all post connection
             this.textboxes.forEach( t => t.selected = false);
+        }
+    },
+    watch:{
+        textboxes: {
+            handler(newTextboxes){
+                this.updateTextboxesHandler(newTextboxes)
+            },
+            deep: true // 
+        },
+        lines(newLines){
+            this.updateLinesHandler(newLines);
         }
     }
 }

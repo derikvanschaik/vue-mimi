@@ -3,7 +3,9 @@
       v-if="idx !== null"
       :curTextboxes="mindmaps[idx].textboxes" 
       :curLines="mindmaps[idx].lines"
-      :handleClose="()=> setIdx(null)"/>
+      :handleClose="()=> setIdx(null)"
+      :updateTextboxesHandler="updateTextboxes"
+      :updateLinesHandler="updateLines"/>
     <ul v-else>
       <li v-for="mindmap, i in mindmaps" :key="i" @click="setIdx(i)">
         <a href="#">{{ mindmap.title}}</a>
@@ -49,6 +51,12 @@ export default {
   methods:{
     setIdx(i){
       this.idx = i;
+    },
+    updateTextboxes(textboxes){
+      this.mindmaps[this.idx].textboxes = textboxes;
+    },
+    updateLines(lines){
+      this.mindmaps[this.idx].lines = lines;
     }
   }
 }
