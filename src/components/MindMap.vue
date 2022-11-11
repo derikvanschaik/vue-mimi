@@ -1,5 +1,6 @@
 <template>
     <canvas :width="width" :height="height" ref="canvas"></canvas>
+    <button class="menu-btn close" @click="handleClose">Close</button>
     <div class="menu">
         <button class="menu-btn" @click="addTextbox">Add Tbox</button>
         <button class="menu-btn" @click="connectedSelected" :disabled="cannotConnect">Connect</button>
@@ -27,6 +28,7 @@ export default {
     props:{
         curTextboxes: Array,
         curLines: Array,
+        handleClose: Function,
     }, 
     // TODO: maybe move this canvas resizing into a specific canvas component since it is not 
     // not really app logic...
@@ -92,10 +94,6 @@ export default {
                 ctx.stroke();
             })
         },
-        // so far only redraws -- may need to add and delete lines in the future as well
-        // maybe we can add a final param that is a string describing the action 
-        // like: updateLines(action="DELETE", oldX, oldY, newX, newY)
-        // or we can update and check the param count..
         updateLines(oldX, oldY, newX, newY){
             const deletingLine = (newX === null || newX === undefined) 
             && (newY === null || newY === undefined);
@@ -148,5 +146,10 @@ canvas{
 }
 .menu-btn{
     padding: 10px 15px;
+}
+.close{
+    position: absolute;
+    right: 50px;
+    top: 0;
 }
 </style>
