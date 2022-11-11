@@ -6,11 +6,15 @@
       :handleClose="()=> setIdx(null)"
       :updateTextboxesHandler="updateTextboxes"
       :updateLinesHandler="updateLines"/>
-    <ul v-else>
-      <li v-for="mindmap, i in mindmaps" :key="i" @click="setIdx(i)">
-        <a href="#">{{ mindmap.title}}</a>
-      </li>
-    </ul>
+    <div v-else class="container">
+      <ul>
+        <li v-for="mindmap, i in mindmaps" :key="i" @click="setIdx(i)">
+          <a href="#">{{ mindmap.title}}</a>
+        </li>
+      </ul>
+    </div>
+
+
 </template>
 
 <script>
@@ -61,3 +65,31 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.container{
+  background-color: #34495E;
+  height: 100vh;
+  display: flex;
+}
+ul {
+  list-style: none;
+  margin: auto;
+  height: 80%;
+  width: 50%;
+  background-color: #41B883;
+  padding: 50px 50px;
+  text-align: center;
+}
+li{
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  padding: 15px 20px;
+  margin: 25px 25px;
+}
+a{
+  color: #42b883;
+  font-size: x-large;
+}
+
+</style>
