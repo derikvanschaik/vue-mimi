@@ -89,13 +89,6 @@ export default {
         cannotLink(){
             return this.textboxes.filter(t => t.selected).length !== 1;
         },
-        showLinkedChoice(){
-            if(this.mindmaps[this.linkedMindmapIdx]){
-                return this.mindmaps[this.linkedMindmapIdx].title;
-            }else{
-                return "No Choice selected";
-            }
-        }
     },
     data(){
         return{
