@@ -7,7 +7,9 @@
       :handleClose="()=> setIdx(null)"
       :updateTextboxesHandler="updateTextboxes"
       :updateLinesHandler="updateLines"
-      :navigateMindmap="navigateMindmapCallback()"/>
+      :navigateMindmap="navigateMindmapCallback()"
+      :path="path"
+      :pathChange="pathChangeCallback()"/>
     <div v-else class="container">
       <ul>
         <li v-for="mindmap, i in mindmaps" :key="i" @click="setIdx(i)">
@@ -32,40 +34,81 @@ export default {
         idx : null,
         mindmaps:[
           {
-            title: 'mindmap1',
+            title: 'My Company',
             textboxes: [
                   { 
-                    x: 10, 
+                    x: 600, 
                     y: 100, 
-                    text: 'link to 2nd mindmap', 
+                    text: 'Careers', 
                     selected: false, 
                     id: uuid(),
                     link: 1, 
+                 },
+                 { 
+                    x: 10, 
+                    y: 100, 
+                    text: 'Employees', 
+                    selected: false, 
+                    id: uuid(),
+                    link: 2, 
                  },
               ],
               lines: [],
           },
           {
-            title: 'my second mindmap',
+            title: 'Occupations',
             textboxes: [
-                  { x: 100, y: 100, text: 'link to third mindmap', selected: false, id: uuid(), link : 2 },
-                  { x: 400, y: 500, text: 'random text', selected: false, id: uuid(), link : -1 },
-                  { x: 600, y: 100, text: 'more random text', selected: false, id: uuid(), link : -1 },
-              ],
-              lines: [ 
-                      { fromX: 100, fromY: 100, toX: 400, toY: 500},
-                      { fromX: 100, fromY: 100, toX: 600, toY: 100},
-                    ]
-          },
-          {
-            title: 'my third mindmap',
-            textboxes: [
-                  { x: 200, y: 500, text: 'link to first mindmap', selected: false, id: uuid(), link : 0 },
+                  { x: 100, y: 100, text: 'Engineering', selected: false, id: uuid(), link : 3 },
+                  { x: 400, y: 500, text: 'Finance', selected: false, id: uuid(), link : 4 },
+                  { x: 600, y: 100, text: 'Marketing', selected: false, id: uuid(), link : 5 },
               ],
               lines: []
-          }
-        ]
+          },
+          {
+            title: 'Employees @ company',
+            textboxes: [
+                  { x: 200, y: 500, text: 'Jeff Caronzo', selected: false, id: uuid(), link : -1 },
+                  { x: 500, y: 500, text: 'Silas Bonana', selected: false, id: uuid(), link : -1 },
+              ],
+              lines: []
+          },
+          {
+            title: 'types of Engineering',
+            textboxes: [
+                  { x: 100, y: 100, text: 'Software', selected: false, id: uuid(), link : -1 },
+                  { x: 400, y: 500, text: 'Financial', selected: false, id: uuid(), link : -1 },
+                  { x: 600, y: 100, text: 'Civil', selected: false, id: uuid(), link : -1 },
+              ],
+              lines: []
+          },
+          {
+            title: 'types of Finance',
+            textboxes: [
+                  { x: 100, y: 100, text: 'Accounting', selected: false, id: uuid(), link : -1 },
+                  { x: 400, y: 500, text: 'Legal', selected: false, id: uuid(), link : -1 },
+                  { x: 600, y: 100, text: 'Venture Capital', selected: false, id: uuid(), link : -1 },
+              ],
+              lines: []
+          },
+          {
+            title: 'types of Marketing',
+            textboxes: [
+                  { x: 100, y: 100, text: 'Digital', selected: false, id: uuid(), link : -1 },
+                  { x: 400, y: 500, text: 'Media', selected: false, id: uuid(), link : -1 },
+              ],
+              lines: []
+          },
+        ],
+        path: [], // [{link: 0, title: mindmap title}]
 
+    }
+  },
+  watch: {
+    idx(cur, old){
+      if(cur !== null && old === null){
+        this.path = [];
+        this.addToPath(cur);
+      }
     }
   },
   methods:{
@@ -81,8 +124,18 @@ export default {
     navigateMindmapCallback(){
       return (idx) =>{
         this.setIdx(idx);
+        this.addToPath(idx);
       }
-    }
+    },
+    addToPath(idx){
+      this.path.push({ link: idx, title: this.mindmaps[idx].title });
+    },
+    pathChangeCallback(){
+      return (pathIdx, linkIdx) => {
+        this.path = this.path.slice(0, pathIdx + 1);
+        this.idx = linkIdx;
+      }
+    },
   }
 }
 </script>

@@ -23,14 +23,24 @@
         :startY="t.y"
         :link="t.link"
         :navigateMindmap="navigateMindmap"/>
+
+        <ul class="path">
+            <link-component
+                class="link"
+                v-for="p,i in path" 
+                :key="p" 
+                :text="p.title"
+                :handleNavigate="() => handlePathChange(i, p.link )"/>
+        </ul>
 </template>
 
 <script>
 import DragText from './DragText.vue';
+import LinkComponent from './LinkComponent.vue';
 const { v4: uuid } = require("uuid")
 
 export default {
-    components:{DragText},
+    components:{DragText, LinkComponent},
     props:{
         curTextboxes: Array,
         curLines: Array,
@@ -38,6 +48,8 @@ export default {
         updateTextboxesHandler: Function, 
         updateLinesHandler: Function,
         navigateMindmap: Function,
+        path: Array,
+        pathChange: Function,
     }, 
     // TODO: maybe move this canvas resizing into a specific canvas component since it is not 
     // not really app logic...
@@ -170,7 +182,10 @@ export default {
             this.clearCanvasAndDrawLines();
             // deselect all post connection
             this.textboxes.forEach( t => t.selected = false);
-        }
+        },
+        handlePathChange(idx, link){
+            this.pathChange(idx, link);
+        },
     },
     watch:{
         textboxes: {
@@ -214,4 +229,21 @@ canvas{
   display: inline-block;
   transform: rotate(45deg);
 }
+.path{
+    background-color: #f2f2f2;
+}
+.path{
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.link {
+  float: left;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  font-size: 17px;
+}
+
 </style>
