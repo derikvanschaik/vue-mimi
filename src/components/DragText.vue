@@ -32,67 +32,30 @@ export default {
     idx: Number,
   }, 
   mounted(){
-    // Set the position of element
-    this.$refs.textbox.style.left = `${this.startX}px`;
-    this.$refs.textbox.style.top = `${this.startY}px`;
+    this.repositionTextBox();
   }, 
   updated(){
-    // Set the position of element
-    this.$refs.textbox.style.left = `${this.startX}px`;
-    this.$refs.textbox.style.top = `${this.startY}px`;
+    this.repositionTextBox();
   }, 
   data(){
     return{
       x: this.startX,
       y: this.startY,
-      isDragging: false,
       isEditing: false,
       inputText: this.text,
 
     }
   },
   methods: {
-
+    repositionTextBox(){
+      // Set the position of element
+      this.$refs.textbox.style.left = `${this.startX}px`;
+      this.$refs.textbox.style.top = `${this.startY}px`;
+    },
     emitDragStart(e){
       if(this.isEditing) return;
       // set the current mouse position
-      console.log(e.clientX, e.clientY);
       this.$emit('dragStart',e.clientX, e.clientY, this.idx);
-
-      this.x = e.clientX;
-      this.y = e.clientY;
-    },
-    handleDrag(e){
-      if(this.isDragging){
-
-        if(e.target !== this.$refs.textbox) return
-        // draw textbox 
-        const dx = e.clientX - this.x;
-        const dy = e.clientY - this.y;
-
-        // get old pos 
-        const oldOffsetTop = e.target.offsetTop;
-        const oldOffsetLeft = e.target.offsetLeft;
-        // Set the position of element
-        e.target.style.top = `${e.target.offsetTop + dy}px`;
-        e.target.style.left = `${e.target.offsetLeft + dx}px`;
-
-        // Reassign the position of mouse
-        this.x = e.clientX;
-        this.y = e.clientY;
-        // call callback
-        
-        // values are left and top for x and y -- is this what we want though?...
-        this.updateLinesHandler(
-          oldOffsetLeft, oldOffsetTop,
-          (e.target.offsetLeft),(e.target.offsetTop));
-          
-        this.updateTextbox(e.target.offsetLeft, e.target.offsetTop);
-      }
-    },
-    handleDragEnd(){
-      this.updateTextbox(this.$refs.textbox.offsetLeft, this.$refs.textbox.offsetTop);
-      this.isDragging = false;
     },
     handleDelete(){
       this.deleteTextbox();
