@@ -2,9 +2,7 @@
   <div
     ref="textbox"
     class="textbox"
-    @mousemove="handleDrag"
-    @mousedown="handleDragStart"
-    @mouseup="handleDragEnd">
+    @mousedown="emitDragStart">
     <p v-if="!isEditing">
       {{ inputText }}
     </p>
@@ -30,9 +28,15 @@ export default {
     selected: Boolean,
     text: String,
     startX: Number,
-    startY: Number
+    startY: Number,
+    idx: Number,
   }, 
   mounted(){
+    // Set the position of element
+    this.$refs.textbox.style.left = `${this.startX}px`;
+    this.$refs.textbox.style.top = `${this.startY}px`;
+  }, 
+  updated(){
     // Set the position of element
     this.$refs.textbox.style.left = `${this.startX}px`;
     this.$refs.textbox.style.top = `${this.startY}px`;
@@ -49,12 +53,14 @@ export default {
   },
   methods: {
 
-    handleDragStart(e){
+    emitDragStart(e){
       if(this.isEditing) return;
       // set the current mouse position
+      console.log(e.clientX, e.clientY);
+      this.$emit('dragStart',e.clientX, e.clientY, this.idx);
+
       this.x = e.clientX;
       this.y = e.clientY;
-      this.isDragging = true;
     },
     handleDrag(e){
       if(this.isDragging){

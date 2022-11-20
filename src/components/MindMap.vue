@@ -10,6 +10,8 @@
     <drag-text
         v-for="t,i in textboxes"
         :key="t.id"
+        :idx="i"
+        @drag-start="handleDragStart"
         :updateLinesHandler="updateLines"
         :updateTextbox="updateTextbox(i)"
         :deleteTextbox="deleteTextbox(i)"
@@ -38,6 +40,9 @@ export default {
     // not really app logic...
     mounted(){
         this.clearCanvasAndDrawLines();
+        // todo: remove these functions on onmounted
+        document.addEventListener("mousemove", this.handleMouseMove);
+        document.addEventListener("mouseup", () => this.isDragging = false);
     },
     computed:{
         cannotConnect(){
@@ -52,9 +57,42 @@ export default {
             // app 
             textboxes: this.curTextboxes,
             lines: this.curLines,
+            isDragging: false,
+            x: 0,
+            y: 0,
+            dragBoxIdx: -1,
         }
     },
     methods: {
+        handleDragStart(x, y, i){
+            console.log("drag start",x, y);
+            this.isDragging = true;
+            this.x = x;
+            this.y = y;
+            this.dragBoxIdx = i;
+        },
+        handleMouseMove(e){
+            if(this.isDragging){
+                const dx = e.clientX - this.x;
+                const dy = e.clientY - this.y;
+                
+                const oldX = this.textboxes[this.dragBoxIdx].x;
+                const oldY = this.textboxes[this.dragBoxIdx].y;
+
+                this.textboxes[this.dragBoxIdx].x += dx;
+                this.textboxes[this.dragBoxIdx].y += dy;
+
+
+                this.x = e.clientX;
+                this.y = e.clientY;
+
+                // reupdate array to force update on element positions...
+                this.textboxes = this.textboxes.map(t => t);
+                // update lines
+                this.updateLines(oldX, oldY, 
+                    this.textboxes[this.dragBoxIdx].x, this.textboxes[this.dragBoxIdx].y);
+            }
+        },
         addTextbox(){
             this.textboxes.push(
                 {
