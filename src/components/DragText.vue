@@ -3,9 +3,16 @@
     ref="textbox"
     class="textbox"
     @mousedown="emitDragStart">
-    <p v-if="!isEditing">
-      {{ inputText }}
-    </p>
+    <div v-if="!isEditing" class="textbox-text">
+      <div v-if="link >= 0">
+        <link-component
+          :handleNavigate="handleNavigate"
+          :text="inputText" />
+      </div>
+      <div v-else>
+        {{ inputText }}
+      </div>
+    </div>
     <textarea v-else v-model="inputText" rows="7" @input="handleInput"></textarea>
 
     <button @click="handleDelete" class="delete">Delete</button>
@@ -16,9 +23,11 @@
 </template>
 
 <script>
+import LinkComponent from './LinkComponent.vue';
 
 export default {
   name: 'App',
+  components: { LinkComponent },
   props:{
     updateLinesHandler: Function,
     updateTextbox: Function,
@@ -30,6 +39,8 @@ export default {
     startX: Number,
     startY: Number,
     idx: Number,
+    link: Number,
+    navigateMindmap: Function,
   }, 
   mounted(){
     this.repositionTextBox();
@@ -71,6 +82,9 @@ export default {
       if(!this.isEditing){
         this.updateTextboxText(this.inputText);
       }
+    },
+    handleNavigate(){
+      this.navigateMindmap(this.link);
     }
   }
 }
@@ -97,5 +111,8 @@ export default {
 }
 .select{
   right: 0;
+}
+.textbox-text{
+  margin-bottom: 10px;
 }
 </style>

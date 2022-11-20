@@ -20,7 +20,9 @@
         :selected="t.selected"
         :text="t.text"
         :startX="t.x" 
-        :startY="t.y"/>
+        :startY="t.y"
+        :link="t.link"
+        :navigateMindmap="navigateMindmap"/>
 </template>
 
 <script>
@@ -35,6 +37,7 @@ export default {
         handleClose: Function,
         updateTextboxesHandler: Function, 
         updateLinesHandler: Function,
+        navigateMindmap: Function,
     }, 
     // TODO: maybe move this canvas resizing into a specific canvas component since it is not 
     // not really app logic...
@@ -65,7 +68,6 @@ export default {
     },
     methods: {
         handleDragStart(x, y, i){
-            console.log("drag start",x, y);
             this.isDragging = true;
             this.x = x;
             this.y = y;

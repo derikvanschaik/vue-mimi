@@ -1,11 +1,13 @@
 <template>
     <mind-map
+      :key="idx"
       v-if="idx !== null"
       :curTextboxes="mindmaps[idx].textboxes" 
       :curLines="mindmaps[idx].lines"
       :handleClose="()=> setIdx(null)"
       :updateTextboxesHandler="updateTextboxes"
-      :updateLinesHandler="updateLines"/>
+      :updateLinesHandler="updateLines"
+      :navigateMindmap="navigateMindmapCallback()"/>
     <div v-else class="container">
       <ul>
         <li v-for="mindmap, i in mindmaps" :key="i" @click="setIdx(i)">
@@ -32,19 +34,33 @@ export default {
           {
             title: 'mindmap1',
             textboxes: [
-                  { x: 10, y: 100, text: 'hello', selected: false, id: uuid() },
-                  { x: 100, y: 500, text: 'world', selected: false, id: uuid() },
-                  { x: 300, y: 600, text: 'how are you?', selected: false, id: uuid() }
+                  { 
+                    x: 10, 
+                    y: 100, 
+                    text: 'link to 2nd mindmap', 
+                    selected: false, 
+                    id: uuid(),
+                    link: 1, 
+                 },
               ],
-              lines: [ 
-                  { fromX: 10, fromY: 100, toX: 100, toY: 500},
-                  { fromX: 10, fromY: 100, toX: 300, toY: 600}
-              ],
+              lines: [],
           },
           {
             title: 'my second mindmap',
             textboxes: [
-                  { x: 100, y: 100, text: 'whatsup dude!??', selected: false, id: uuid() },
+                  { x: 100, y: 100, text: 'link to third mindmap', selected: false, id: uuid(), link : 2 },
+                  { x: 400, y: 500, text: 'random text', selected: false, id: uuid(), link : -1 },
+                  { x: 600, y: 100, text: 'more random text', selected: false, id: uuid(), link : -1 },
+              ],
+              lines: [ 
+                      { fromX: 100, fromY: 100, toX: 400, toY: 500},
+                      { fromX: 100, fromY: 100, toX: 600, toY: 100},
+                    ]
+          },
+          {
+            title: 'my third mindmap',
+            textboxes: [
+                  { x: 200, y: 500, text: 'link to first mindmap', selected: false, id: uuid(), link : 0 },
               ],
               lines: []
           }
@@ -61,6 +77,11 @@ export default {
     },
     updateLines(lines){
       this.mindmaps[this.idx].lines = lines;
+    },
+    navigateMindmapCallback(){
+      return (idx) =>{
+        this.setIdx(idx);
+      }
     }
   }
 }
