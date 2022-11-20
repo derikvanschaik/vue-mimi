@@ -6,6 +6,7 @@
     <div class="menu">
         <button class="menu-btn" @click="addTextbox">Add Tbox</button>
         <button class="menu-btn" @click="connectedSelected" :disabled="cannotConnect">Connect</button>
+        <button class="menu-btn" @click="toggleShowMindmapList" :disabled="cannotLink">Link</button>
     </div>
     <drag-text
         v-for="t,i in textboxes"
@@ -32,15 +33,34 @@
                 :text="p.title"
                 :handleNavigate="() => handlePathChange(i, p.link )"/>
         </ul>
+
+        <!-- TODO: create a component for this... -->
+        <modal-component :show="showMindmapList">
+            <select
+                v-model="linkedMindmapIdx" >
+                <option 
+                    v-for="mindmap,idx in mindmaps"
+                    :key="idx"
+                    :value="idx">
+                    {{ mindmap.title }}
+                </option>
+            </select>
+            <div>
+                <button @click="linkTextboxToMindmap">Create Link</button>
+                <button @click="toggleShowMindmapList">Cancel</button>
+            </div>
+        </modal-component>
+
 </template>
 
 <script>
 import DragText from './DragText.vue';
 import LinkComponent from './LinkComponent.vue';
+import ModalComponent from './ModalComponent.vue';
 const { v4: uuid } = require("uuid")
 
 export default {
-    components:{DragText, LinkComponent},
+    components:{DragText, LinkComponent, ModalComponent},
     props:{
         curTextboxes: Array,
         curLines: Array,
@@ -50,6 +70,8 @@ export default {
         navigateMindmap: Function,
         path: Array,
         pathChange: Function,
+        mindmaps: Array,
+        createLinkHandler: Function,
     }, 
     // TODO: maybe move this canvas resizing into a specific canvas component since it is not 
     // not really app logic...
@@ -62,6 +84,16 @@ export default {
     computed:{
         cannotConnect(){
             return this.textboxes.filter(t => t.selected).length !== 2;
+        },
+        cannotLink(){
+            return this.textboxes.filter(t => t.selected).length !== 1;
+        },
+        showLinkedChoice(){
+            if(this.mindmaps[this.linkedMindmapIdx]){
+                return this.mindmaps[this.linkedMindmapIdx].title;
+            }else{
+                return "No Choice selected";
+            }
         }
     },
     data(){
@@ -76,6 +108,8 @@ export default {
             x: 0,
             y: 0,
             dragBoxIdx: -1,
+            showMindmapList: false,
+            linkedMindmapIdx : null,
         }
     },
     methods: {
@@ -114,7 +148,8 @@ export default {
                     y: 500,
                     text: 'click edit to change text',
                     selected: false,
-                    id: uuid()
+                    id: uuid(),
+                    link: -1
                 }
             )
         },
@@ -186,6 +221,23 @@ export default {
         handlePathChange(idx, link){
             this.pathChange(idx, link);
         },
+        toggleShowMindmapList(){
+            this.showMindmapList = !this.showMindmapList;
+            if(this.showMindmapList){
+                this.linkedMindmapIdx = this.textboxes.find( t => t.selected === true).link;
+                if(this.linkedMindmapIdx === -1){
+                    this.linkedMindmapIdx = null;
+                }
+            }else{
+                this.linkedMindmapIdx = null;
+            }
+        },
+        linkTextboxToMindmap(){
+            const tboxIdx = this.textboxes.indexOf( this.textboxes.find( t => t.selected === true));
+            this.createLinkHandler(tboxIdx, this.linkedMindmapIdx);
+            this.toggleShowMindmapList(); // set to false
+            this.textboxes.forEach( t => t.selected = false);
+        },
     },
     watch:{
         textboxes: {
@@ -244,6 +296,9 @@ canvas{
   text-align: center;
   padding: 14px 16px;
   font-size: 17px;
+}
+.selected{
+    background-color: blue;
 }
 
 </style>

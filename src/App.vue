@@ -9,7 +9,9 @@
       :updateLinesHandler="updateLines"
       :navigateMindmap="navigateMindmapCallback()"
       :path="path"
-      :pathChange="pathChangeCallback()"/>
+      :pathChange="pathChangeCallback()"
+      :mindmaps="mindmaps"
+      :createLinkHandler="createLink"/>
     <div v-else class="container">
       <ul>
         <li v-for="mindmap, i in mindmaps" :key="i" @click="setIdx(i)">
@@ -136,6 +138,10 @@ export default {
         this.idx = linkIdx;
       }
     },
+    createLink(textboxIdx, mindmapIdx){
+      console.log("createLink", textboxIdx, mindmapIdx);
+      this.mindmaps[this.idx].textboxes[textboxIdx].link = mindmapIdx;
+    }
   }
 }
 </script>
