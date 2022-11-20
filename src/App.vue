@@ -139,7 +139,6 @@ export default {
       }
     },
     createLink(textboxIdx, mindmapIdx){
-      console.log("createLink", textboxIdx, mindmapIdx);
       this.mindmaps[this.idx].textboxes[textboxIdx].link = mindmapIdx;
     }
   }
