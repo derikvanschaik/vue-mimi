@@ -12,9 +12,15 @@
       :pathChange="pathChangeCallback()"
       :mindmaps="mindmaps"
       :createLinkHandler="createLink"/>
-    <div v-else class="container">
+    <div v-else class="container my-2">
       <div class="row">
-        <h1 class="my-5">Mindmaps</h1>
+        <div class="jumbotron my-1 rounded">
+          <h1 class="display-4">MIMI: Mindmaps made easy</h1>
+          <p class="lead">Either click one of the links below to explore existing mindmaps, or create a 
+            new mindmap on the right!
+          </p>
+        </div>
+        
       </div>
       <div class="row">
         <div class="col-8">
@@ -26,7 +32,10 @@
                     type="button" 
                     class="btn btn-outline-dark mx-3"
                     @click="openEditMindmapModal(i)">Edit</button>
-                  <button type="button" class="btn btn-outline-danger">Delete</button>
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-danger"
+                    @click="openDeleteMindmapModal(i)">Delete</button>
               </div>
             </li>
           </ul>
@@ -54,7 +63,7 @@
       <!-- edit existing mindmap name -->
       <modal-component :handleClose="closeModal" :show="showEditModal">
         <div class="form-group my-5">
-          <label for="mindmap-name">Enter New Name</label>
+          <label for="mindmap-name">Enter new name for mindmap '{{ previousTitle }}' :</label>
           <input 
             class="form-control" 
             name="mindmap-name" 
@@ -63,6 +72,23 @@
         </div>
         <button class="btn btn-secondary my-3" @click="editMindmapTitle">Change</button>
         <button class="btn btn-outline-danger" @click="closeModal">Cancel</button>
+      </modal-component>
+      
+      <!-- delete mindmap modal -->
+      <modal-component :handleClose="closeModal" :show="showDeleteModal">
+        <div class="alert alert-danger">
+          <h4>WARNING!!! 🤯</h4>
+          <p>
+            If you have any <strong>textboxes containing links referencing this mindmap</strong> 
+            this can result in very strange and unexpected behaviour! <br/>
+            We are aware of this issue and we are 
+            working on resolving it. 👨‍💻 <br/>
+            For now the user assumes the risk of this action,
+            sorry about that! 😬
+          </p>
+        </div>
+        <button class="btn btn-danger my-3" @click="deleteMindmap">Delete</button>
+        <button class="btn btn-secondary" @click="closeModal">Cancel</button>
       </modal-component>
     </div>
 
@@ -80,17 +106,27 @@ export default {
     ModalComponent
   },
   computed : {
+    previousTitle(){
+      if (this.editIdx !== null){
+        return this.mindmaps[this.editIdx].title
+      }
+      return ''
+    },
     showCreateNewModal(){
       return this.modal.open === true && this.modal.type === 'create'
     },
     showEditModal(){
       return this.modal.open === true && this.modal.type === 'edit'
+    },
+    showDeleteModal(){
+      return this.modal.open === true && this.modal.type === 'delete'
     }
   },
   data(){
     return{
         modal: { open: false, type: 'create'}, // type = create || edit || delete
         newMindmapName : '',
+        deleteIdx: null,
         editIdx: null,
         idx : null,
         mindmaps:[
@@ -179,6 +215,9 @@ export default {
     setEditIdx(i){
       this.editIdx = i;
     },
+    setDeleteIdx(i){
+      this.deleteIdx = i;
+    },
     updateTextboxes(textboxes){
       this.mindmaps[this.idx].textboxes = textboxes;
     },
@@ -210,6 +249,10 @@ export default {
       this.setEditIdx(i)
       this.modal = {open: true, type: 'edit'}
     },
+    openDeleteMindmapModal(i){
+      this.setDeleteIdx(i)
+      this.modal = {open: true, type: 'delete'}
+    },
     closeModal(){
       this.modal.open = false
     },
@@ -227,6 +270,20 @@ export default {
       this.mindmaps[this.editIdx].title = this.newMindmapName
       this.newMindmapName = ''
       this.modal.open = false
+    },
+    deleteMindmap(){
+      // before deleting we need to remove all dead links to this mindmap....
+      // if not this will inaccurately index links into the mindmpas array
+      // TODO: FIX THIS! 
+      // the fix requires we create unique ids for each mindmap so that links reference the id
+      // instead of their idx
+      // Note: this may affect the path component as well, need to look into that. 
+      // for now we just provide an error message to the user notifying them of strange behaviours that
+      // may occur from this action.
+      this.mindmaps = [
+        ...this.mindmaps.slice(0, this.deleteIdx),
+         ...this.mindmaps.slice(this.deleteIdx + 1, this.mindmaps.length)]
+      this.modal.open = false
     }
   }
 }
@@ -241,6 +298,16 @@ li {
   padding: 15px 20px;
   font-size: x-large;
 }
-
+a{
+  color: slategrey;
+}
+.jumbotron{
+  background-color: lightslategrey;
+  color: whitesmoke;
+  padding: 5em 4em;
+}
+.lead{
+  color: white
+}
 
 </style>
