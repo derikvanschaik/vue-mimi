@@ -36,9 +36,10 @@
 
         <!-- TODO: create a component for this... -->
         <modal-component :show="showMindmapList" :handleClose="() => showMindmapList = false">
-            <h1>Create a link to one of the mindmaps below</h1>
+            <p class="my-3">Create a link to one of the following mindmaps:</p>
             <select
-                v-model="linkedMindmapIdx" >
+                v-model="linkedMindmapIdx"
+                class="form-select">
                 <option 
                     v-for="mindmap,idx in mindmaps"
                     :key="idx"
@@ -46,9 +47,9 @@
                     {{ mindmap.title }}
                 </option>
             </select>
-            <div>
-                <button @click="linkTextboxToMindmap">Create Link</button>
-                <button @click="toggleShowMindmapList">Cancel</button>
+            <div class="my-3">
+                <button class="btn btn-success mx-3" @click="linkTextboxToMindmap">Create Link</button>
+                <button class="btn btn-secondary" @click="toggleShowMindmapList">Cancel</button>
             </div>
         </modal-component>
 
