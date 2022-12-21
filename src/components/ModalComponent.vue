@@ -22,17 +22,6 @@ export default {
 }
 </script>
 <style>
-/* .modal{
-    position: absolute;
-    background-color: #f2f2f2;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px 30px;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-} */
 
 /* The Modal (background) */
 .modal {
@@ -55,7 +44,7 @@ export default {
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 50%;
 }
 
 /* The Close Button */
