@@ -256,9 +256,15 @@ export default {
     closeModal(){
       this.modal.open = false
     },
-    createNewMindmap(){
+    isMindmapNameEmpty(){
       if(this.newMindmapName === ''){
         alert('Mindmap name cannot be blank!')
+        return true
+      }
+      return false
+    }, 
+    createNewMindmap(){
+      if (this.isMindmapNameEmpty() ){
         return
       }
       const newMindmap = {title: this.newMindmapName, textboxes: [], lines : []}
@@ -267,6 +273,9 @@ export default {
       this.modal.open = false
     },
     editMindmapTitle(){
+      if (this.isMindmapNameEmpty() ){
+        return
+      }
       this.mindmaps[this.editIdx].title = this.newMindmapName
       this.newMindmapName = ''
       this.modal.open = false
