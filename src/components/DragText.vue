@@ -15,7 +15,7 @@
     </div>
     <textarea v-else v-model="inputText" rows="7" @input="handleInput"></textarea>
 
-    <button @click="handleDelete" class="delete">Delete</button>
+    <span class="delete" @click="handleDelete">&times;</span>
     <button @click="toggleIsEditing">{{ isEditing? 'Done': 'Edit'}}</button>
     <input @click="handleSelect" type="checkbox" class="select" :checked="selected"/>
 
@@ -108,6 +108,7 @@ export default {
 }
 .delete{
   left: 0;
+  font-size: xx-large;
 }
 .select{
   right: 0;
