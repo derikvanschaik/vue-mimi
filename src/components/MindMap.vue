@@ -35,7 +35,7 @@
         </ul>
 
         <!-- TODO: create a component for this... -->
-        <modal-component :show="showMindmapList">
+        <modal-component :show="showMindmapList" :handleClose="() => showMindmapList = false">
             <h1>Create a link to one of the mindmaps below</h1>
             <select
                 v-model="linkedMindmapIdx" >
