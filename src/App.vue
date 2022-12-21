@@ -13,9 +13,10 @@
       :mindmaps="mindmaps"
       :createLinkHandler="createLink"/>
     <div v-else class="container">
-      <ul>
-        <li v-for="mindmap, i in mindmaps" :key="i" @click="setIdx(i)">
-          <a href="#">{{ mindmap.title}}</a>
+      <h1 class="my-5">Mindmaps</h1>
+      <ul class="list-group">
+        <li v-for="mindmap, i in mindmaps" :key="i" class="list-group-item">
+          <a href="#" @click="setIdx(i)">{{ mindmap.title}}</a>
         </li>
       </ul>
     </div>
@@ -146,17 +147,12 @@ export default {
 </script>
 
 <style scoped>
-.container{
-  background-color: #34495E;
-  height: 100vh;
-  display: flex;
-}
+/* 
 ul {
   list-style: none;
   margin: auto;
   height: 80%;
-  width: 50%;
-  background-color: #41B883;
+  width: 80%;
   padding: 50px 50px;
   text-align: center;
 }
@@ -165,9 +161,12 @@ li{
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
   padding: 15px 20px;
   margin: 25px 25px;
+} */
+ul{
+  width: 80%
 }
-a{
-  color: #42b883;
+li {
+  padding: 15px 20px;
   font-size: x-large;
 }
 
