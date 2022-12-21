@@ -4,9 +4,9 @@
         <span class="close-icon">+</span>
     </div>
     <div class="menu">
-        <button class="menu-btn" @click="addTextbox">Add Tbox</button>
-        <button class="menu-btn" @click="connectedSelected" :disabled="cannotConnect">Connect</button>
-        <button class="menu-btn" @click="toggleShowMindmapList" :disabled="cannotLink">Link</button>
+        <button class="menu-btn btn btn-light btn-outline-dark mx-1" @click="addTextbox">Add Tbox</button>
+        <button class="menu-btn btn btn-light btn-outline-dark mx-1" @click="connectedSelected" :disabled="cannotConnect">Connect</button>
+        <button class="menu-btn btn btn-light btn-outline-dark mx-1" @click="toggleShowMindmapList" :disabled="cannotLink">Link</button>
     </div>
     <drag-text
         v-for="t,i in textboxes"
