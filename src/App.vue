@@ -13,12 +13,36 @@
       :mindmaps="mindmaps"
       :createLinkHandler="createLink"/>
     <div v-else class="container">
-      <h1 class="my-5">Mindmaps</h1>
-      <ul class="list-group">
-        <li v-for="mindmap, i in mindmaps" :key="i" class="list-group-item">
-          <a href="#" @click="setIdx(i)">{{ mindmap.title}}</a>
-        </li>
-      </ul>
+      <div class="row">
+        <h1 class="my-5">Mindmaps</h1>
+      </div>
+      <div class="row">
+        <div class="col-8">
+          <ul class="list-group">
+            <li v-for="mindmap, i in mindmaps" :key="i" class="list-group-item">
+              <a href="#" @click="setIdx(i)">{{ mindmap.title}}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-4">
+          <button
+            @click="openCreateNewModal"
+            class="btn btn-secondary">New Mindmap</button>
+        </div>
+      </div>
+      <!-- modals -->
+      <modal-component :handleClose="closeModal" :show="showCreateNewModal">
+        <div class="form-group my-5">
+          <label for="mindmap-name">Mindmap Name</label>
+          <input 
+            class="form-control" 
+            name="mindmap-name" 
+            placeholder="Enter new mindmap name" 
+            v-model="newMindmapName" >
+        </div>
+        <button class="btn btn-secondary my-3" @click="createNewMindmap">Create</button>
+        <button class="btn btn-outline-danger" @click="closeModal">Cancel</button>
+      </modal-component>
     </div>
 
 
@@ -26,14 +50,23 @@
 
 <script>
 import MindMap from './components/MindMap.vue';
+import ModalComponent from './components/ModalComponent.vue'
 const { v4: uuid } = require("uuid")
 
 export default {
   components:{
-    MindMap
+    MindMap,
+    ModalComponent
+  },
+  computed : {
+    showCreateNewModal(){
+      return this.modal.open === true && this.modal.type === 'create'
+    }
   },
   data(){
     return{
+        modal: { open: false, type: 'create'}, // type = create || delete
+        newMindmapName : '',
         idx : null,
         mindmaps:[
           {
@@ -141,29 +174,31 @@ export default {
     },
     createLink(textboxIdx, mindmapIdx){
       this.mindmaps[this.idx].textboxes[textboxIdx].link = mindmapIdx;
+    },
+    openCreateNewModal(){
+      this.modal = { open: true, type: 'create'}
+    },
+    closeModal(){
+      this.modal.open = false
+    },
+    createNewMindmap(){
+      if(this.newMindmapName === ''){
+        alert('Mindmap name cannot be blank!')
+        return
+      }
+      const newMindmap = {title: this.newMindmapName, textboxes: [], lines : []}
+      this.mindmaps.push(newMindmap)
+      this.newMindmapName = ''
+      this.modal.open = false
     }
   }
 }
 </script>
 
 <style scoped>
-/* 
-ul {
-  list-style: none;
-  margin: auto;
-  height: 80%;
-  width: 80%;
-  padding: 50px 50px;
-  text-align: center;
-}
-li{
-  background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  padding: 15px 20px;
-  margin: 25px 25px;
-} */
+
 ul{
-  width: 80%
+  width: 100%
 }
 li {
   padding: 15px 20px;
