@@ -19,8 +19,15 @@
       <div class="row">
         <div class="col-8">
           <ul class="list-group">
-            <li v-for="mindmap, i in mindmaps" :key="i" class="list-group-item">
+            <li v-for="mindmap, i in mindmaps" :key="i" class="list-group-item d-flex justify-content-between">
               <a href="#" @click="setIdx(i)">{{ mindmap.title}}</a>
+              <div class="action-menu">
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-dark mx-3"
+                    @click="openEditMindmapModal(i)">Edit</button>
+                  <button type="button" class="btn btn-outline-danger">Delete</button>
+              </div>
             </li>
           </ul>
         </div>
@@ -30,7 +37,7 @@
             class="btn btn-secondary">New Mindmap</button>
         </div>
       </div>
-      <!-- modals -->
+      <!-- create new mindmap -->
       <modal-component :handleClose="closeModal" :show="showCreateNewModal">
         <div class="form-group my-5">
           <label for="mindmap-name">Mindmap Name</label>
@@ -41,6 +48,20 @@
             v-model="newMindmapName" >
         </div>
         <button class="btn btn-secondary my-3" @click="createNewMindmap">Create</button>
+        <button class="btn btn-outline-danger" @click="closeModal">Cancel</button>
+      </modal-component>
+
+      <!-- edit existing mindmap name -->
+      <modal-component :handleClose="closeModal" :show="showEditModal">
+        <div class="form-group my-5">
+          <label for="mindmap-name">Enter New Name</label>
+          <input 
+            class="form-control" 
+            name="mindmap-name" 
+            placeholder="Enter new mindmap name"
+            v-model="newMindmapName" >
+        </div>
+        <button class="btn btn-secondary my-3" @click="editMindmapTitle">Change</button>
         <button class="btn btn-outline-danger" @click="closeModal">Cancel</button>
       </modal-component>
     </div>
@@ -61,12 +82,16 @@ export default {
   computed : {
     showCreateNewModal(){
       return this.modal.open === true && this.modal.type === 'create'
+    },
+    showEditModal(){
+      return this.modal.open === true && this.modal.type === 'edit'
     }
   },
   data(){
     return{
-        modal: { open: false, type: 'create'}, // type = create || delete
+        modal: { open: false, type: 'create'}, // type = create || edit || delete
         newMindmapName : '',
+        editIdx: null,
         idx : null,
         mindmaps:[
           {
@@ -151,6 +176,9 @@ export default {
     setIdx(i){
       this.idx = i;
     },
+    setEditIdx(i){
+      this.editIdx = i;
+    },
     updateTextboxes(textboxes){
       this.mindmaps[this.idx].textboxes = textboxes;
     },
@@ -178,6 +206,10 @@ export default {
     openCreateNewModal(){
       this.modal = { open: true, type: 'create'}
     },
+    openEditMindmapModal(i){
+      this.setEditIdx(i)
+      this.modal = {open: true, type: 'edit'}
+    },
     closeModal(){
       this.modal.open = false
     },
@@ -188,6 +220,11 @@ export default {
       }
       const newMindmap = {title: this.newMindmapName, textboxes: [], lines : []}
       this.mindmaps.push(newMindmap)
+      this.newMindmapName = ''
+      this.modal.open = false
+    },
+    editMindmapTitle(){
+      this.mindmaps[this.editIdx].title = this.newMindmapName
       this.newMindmapName = ''
       this.modal.open = false
     }
