@@ -283,12 +283,28 @@ export default {
     deleteMindmap(){
       // before deleting we need to remove all dead links to this mindmap....
       // if not this will inaccurately index links into the mindmpas array
-      // TODO: FIX THIS! 
       // the fix requires we create unique ids for each mindmap so that links reference the id
       // instead of their idx
       // Note: this may affect the path component as well, need to look into that. 
       // for now we just provide an error message to the user notifying them of strange behaviours that
       // may occur from this action.
+
+      // current fix for this issue -> decrement all the link values of every textbox that links to a mindmap 
+      // that comes after the deleted mindmap and set the links to -1 if they are referencing the current mindmap
+
+      // update all current links that point to or after the deleted mindmap idx
+      for(const m of this.mindmaps){
+        for (const t of m.textboxes){
+          if (t.link === this.deleteIdx){
+            t.link = -1;
+          }
+          if (t.link > this.deleteIdx){
+            t.link -= 1
+            console.log("here", t.link)
+          }
+        }
+      }
+      // delete mindmap
       this.mindmaps = [
         ...this.mindmaps.slice(0, this.deleteIdx),
          ...this.mindmaps.slice(this.deleteIdx + 1, this.mindmaps.length)]
