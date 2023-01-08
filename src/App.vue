@@ -80,7 +80,7 @@
         <div class="alert alert-danger" v-if="getLinkReferenceCount > 0">
           <h4>WARNING</h4>
           <p>
-            you have {{ getLinkReferenceCount }} link{{ getLinkReferenceCount > 1?'s': ''}} to this mindmpap,
+            you have {{ getLinkReferenceCount }} link{{ getLinkReferenceCount > 1?'s': ''}} to this mindmap,
             deleting this mindmap will make them dead links.
           </p>
         </div>
