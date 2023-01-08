@@ -76,15 +76,12 @@
       
       <!-- delete mindmap modal -->
       <modal-component :handleClose="closeModal" :show="showDeleteModal">
-        <div class="alert alert-danger">
-          <h4>WARNING!!! 🤯</h4>
+        <h4>This action cannot be undone. Please confirm.</h4>
+        <div class="alert alert-danger" v-if="getLinkReferenceCount > 0">
+          <h4>WARNING</h4>
           <p>
-            If you have any <strong>textboxes containing links referencing this mindmap</strong> 
-            this can result in very strange and unexpected behaviour! <br/>
-            We are aware of this issue and we are 
-            working on resolving it. 👨‍💻 <br/>
-            For now the user assumes the risk of this action,
-            sorry about that! 😬
+            you have {{ getLinkReferenceCount }} link{{ getLinkReferenceCount > 1?'s': ''}} to this mindmpap,
+            deleting this mindmap will make them dead links.
           </p>
         </div>
         <button class="btn btn-danger my-3" @click="deleteMindmap">Delete</button>
@@ -119,7 +116,20 @@ export default {
       return this.modal.open === true && this.modal.type === 'edit'
     },
     showDeleteModal(){
-      return this.modal.open === true && this.modal.type === 'delete'
+      return this.modal.open === true && this.modal.type === 'delete';
+    },
+    getLinkReferenceCount(){
+      let count = 0;
+      if(this.deleteIdx !== null){
+        for(const m of this.mindmaps){
+          for(const t of m.textboxes){
+            if (t.link === this.deleteIdx){
+              count++;
+            }
+          }
+        }
+      }
+      return count;
     }
   },
   data(){
@@ -300,7 +310,6 @@ export default {
           }
           if (t.link > this.deleteIdx){
             t.link -= 1
-            console.log("here", t.link)
           }
         }
       }
@@ -309,8 +318,10 @@ export default {
         ...this.mindmaps.slice(0, this.deleteIdx),
          ...this.mindmaps.slice(this.deleteIdx + 1, this.mindmaps.length)]
       this.modal.open = false
-    }
-  }
+    },
+
+  },
+
 }
 </script>
 
