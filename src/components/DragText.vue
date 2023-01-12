@@ -13,7 +13,7 @@
         {{ inputText }}
       </div>
     </div>
-    <textarea v-else v-model="inputText" rows="7" @input="handleInput"></textarea>
+    <textarea v-else v-model="inputText" rows="7" @input="handleInput" class=".text-area"></textarea>
 
     <span class="delete" @click="handleDelete">&times;</span>
     <button @click="toggleIsEditing">{{ isEditing? 'Done': 'Edit'}}</button>
@@ -94,26 +94,33 @@ export default {
   background-color: white;
   color: black;
   position: absolute;
-  padding: 50px 50px;
+  padding: 15px 5px;
   cursor: pointer;
   user-select: none;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
   border-radius: 4px;
   border: 1px solid #42b883;
+  max-width: 250px;
+  word-wrap: break-word;
 }
 
 .delete, .select{
   position: absolute;
-  top: 0;
+  top: 0px;
 }
 .delete{
   left: 0;
   font-size: xx-large;
+  top: -20px;
 }
 .select{
   right: 0;
 }
 .textbox-text{
   margin-bottom: 10px;
+}
+.text-area {
+  height: 100%;
+  width: 100%
 }
 </style>
